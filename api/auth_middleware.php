@@ -47,6 +47,7 @@ function authenticate()
  *
  * @return array The user record
  */
+function authorizeAdmin()
 {
     $user = authenticate();
     if ($user['role'] !== 'admin') {
@@ -60,6 +61,7 @@ function authenticate()
  *
  * @return array The user record
  */
+function authorizeUser()
 {
     return authenticate();
 }

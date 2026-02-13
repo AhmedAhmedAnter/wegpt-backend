@@ -1,6 +1,10 @@
 <?php
 require_once '../../config/database.php';
 require_once '../helpers.php';
+require_once '../auth_middleware.php';
+
+// Allow any logged in user to see lessons
+authorizeUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     sendError('Method Not Allowed', 405);

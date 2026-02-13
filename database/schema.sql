@@ -126,8 +126,8 @@ CREATE TABLE messages (
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
 );
 
--- 9️⃣ Feedback Table
-CREATE TABLE feedback (
+-- 9️⃣ Feedbacks Table
+CREATE TABLE feedbacks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message_id INT NOT NULL,
     user_id INT NOT NULL,

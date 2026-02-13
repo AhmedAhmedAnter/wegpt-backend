@@ -41,4 +41,6 @@ RewriteRule ^messages/send$ messages/create.php [L,QSA]
 
 # --- AI SETTINGS & FEEDBACK ---
 RewriteRule ^ai-settings/?$ ai_settings/index.php [L,QSA]
-RewriteRule ^feedback/send$ feedback/create.php [L,QSA]
+RewriteRule ^feedbacks/?$ feedbacks/index.php [L,QSA]
+RewriteRule ^feedbacks/([0-9]+)$ feedbacks/view.php?id=$1 [L,QSA]
+RewriteRule ^feedbacks/send$ feedbacks/create.php [L,QSA]

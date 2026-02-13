@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    $stmt = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC");
+    $stmt = $pdo->query("SELECT * FROM feedbacks ORDER BY created_at DESC");
     $feedbacks = $stmt->fetchAll();
     sendResponse($feedbacks);
 } catch (PDOException $e) {

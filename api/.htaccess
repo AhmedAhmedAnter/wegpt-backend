@@ -21,8 +21,14 @@ RewriteRule ^login$ users/login.php [L,QSA]
 # --- LESSONS ---
 # GET /api/lessons -> List all
 RewriteRule ^lessons/?$ lessons/index.php [L,QSA]
+# POST /api/lessons/create
+RewriteRule ^lessons/create$ lessons/create.php [L,QSA]
 # GET /api/lessons/5 -> View one
 RewriteRule ^lessons/([0-9]+)$ lessons/view.php?id=$1 [L,QSA]
+# PUT /api/lessons/update/5
+RewriteRule ^lessons/update/([0-9]+)$ lessons/update.php?id=$1 [L,QSA]
+# DELETE /api/lessons/delete/5
+RewriteRule ^lessons/delete/([0-9]+)$ lessons/delete.php?id=$1 [L,QSA]
 
 # --- GRADES, SUBJECTS, SPECIALIZATIONS, TERMS ---
 RewriteRule ^grades/?$ grades/index.php [L,QSA]

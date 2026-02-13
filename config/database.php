@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/env_loader.php';
 
 /**
  * Database Configuration
@@ -6,10 +7,10 @@
  */
 
 $db_config = [
-    'host'     => 'localhost',
-    'dbname'   => 'backend_db',
-    'username' => 'root',
-    'password' => '',
+    'host'     => $_ENV['DB_HOST'] ?? 'localhost',
+    'dbname'   => $_ENV['DB_NAME'] ?? 'backend_db',
+    'username' => $_ENV['DB_USER'] ?? 'root',
+    'password' => $_ENV['DB_PASS'] ?? '',
     'charset'  => 'utf8mb4'
 ];
 
@@ -24,5 +25,5 @@ try {
     $pdo = new PDO($dsn, $db_config['username'], $db_config['password'], $options);
 } catch (\PDOException $e) {
     // In production, you would log this and show a generic message
-    die("Database connection failed: " . $e->getMessage());
+    die("Database connection failed: Connection refused.");
 }

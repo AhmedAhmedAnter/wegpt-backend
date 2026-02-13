@@ -37,3 +37,19 @@ function getJsonInput()
     $input = file_get_contents('php://input');
     return json_decode($input, true);
 }
+
+/**
+ * Simple validation helper
+ *
+ * @param array $data The input data
+ * @param array $required List of required fields
+ * @return void
+ */
+function validateInput($data, $required)
+{
+    foreach ($required as $field) {
+        if (!isset($data[$field]) || (is_string($data[$field]) && trim($data[$field]) === '')) {
+            sendError("Field '$field' is required");
+        }
+    }
+}

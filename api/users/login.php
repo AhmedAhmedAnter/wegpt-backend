@@ -26,13 +26,20 @@ try {
     $updateStmt = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
     $updateStmt->execute([$user['id']]);
 
-    // In a real app, you would generate a JWT here
-    // For now, we'll return the user info (minus password)
+    // Generate JWT
+    require_once '../jwt_helper.php';
+    $token = JWT::encode([
+        'user_id' => $user['id'],
+        'role'    => $user['role'],
+        'email'   => $user['email']
+    ], 86400); // 24 hours
+
     unset($user['password_hash']);
 
     sendResponse([
         'message' => 'Login successful',
-        'user' => $user
+        'token'   => $token,
+        'user'    => $user
     ]);
 } catch (PDOException $e) {
     sendError('Database error: ' . $e->getMessage(), 500);

@@ -1,13 +1,12 @@
 <?php
+require_once __DIR__ . '/jwt_helper.php';
 
 /**
  * Authentication and Authorization Middleware
  */
 
 /**
- * Validates the user's session/token and returns user data
- * For now, using a simple Header based approach (Authorization: Bearer <user_id>)
- * In production, replace with JWT verification.
+ * Validates the user's JWT and returns user data
  *
  * @return array The user record
  */
@@ -21,11 +20,17 @@ function authenticate()
     }
 
     $token = $matches[1];
+    $payload = JWT::decode($token);
+
+    if (!$payload || !isset($payload['user_id'])) {
+        sendError('Unauthorized: Invalid or expired token', 401);
+    }
+
     global $pdo;
 
     try {
         $stmt = $pdo->prepare("SELECT id, role, status FROM users WHERE id = ?");
-        $stmt->execute([$token]);
+        $stmt->execute([$payload['user_id']]);
         $user = $stmt->fetch();
 
         if (!$user) {
@@ -44,8 +49,6 @@ function authenticate()
 
 /**
  * Restricts access to Admin role only
- *
- * @return array The user record
  */
 function authorizeAdmin()
 {
@@ -58,8 +61,6 @@ function authorizeAdmin()
 
 /**
  * Restricts access to students or admins (Generic Auth)
- *
- * @return array The user record
  */
 function authorizeUser()
 {

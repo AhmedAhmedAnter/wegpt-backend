@@ -12,6 +12,9 @@ RewriteRule ^users/?$ users/index.php [L,QSA]
 RewriteRule ^users/([0-9]+)$ users/view.php?id=$1 [L,QSA]
 # POST /api/register
 RewriteRule ^register$ users/register.php [L,QSA]
+
+# --- MEDIA & UPLOADS ---
+RewriteRule ^upload/?$ media/upload.php [L,QSA]
 # POST /api/login
 RewriteRule ^login$ users/login.php [L,QSA]
 

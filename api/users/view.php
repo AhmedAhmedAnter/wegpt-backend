@@ -3,7 +3,7 @@
 require_once '../../config/database.php';
 require_once '../helpers.php';
 require_once "../auth_middleware.php";
-authorizeUser();
+$currUser = authorizeUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     sendError('Method Not Allowed', 405);
@@ -14,6 +14,11 @@ $id = $_GET['id'] ?? null;
 
 if (!$id) {
     sendError('User ID is required');
+}
+
+// Ownership Check: Users can only see themselves unless they are admin
+if ($currUser['id'] != $id && $currUser['role'] !== 'admin') {
+    sendError('Forbidden: Access denied', 403);
 }
 
 try {

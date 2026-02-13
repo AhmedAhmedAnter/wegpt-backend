@@ -102,6 +102,7 @@ Creates a new lesson module.
   - `content_text` (String, Optional)
   - `pdf_path` (URL/Path, Optional)
   - `video_url` (URL, Optional)
+  - `attachments` (JSON/Array, Optional) - List of additional file links.
   - `difficulty_level` (Enum: 'easy', 'medium', 'hard', Default: 'medium')
 - **Response (201)**: `{"message": "Lesson created", "id": 45}`
 
@@ -143,6 +144,7 @@ Sends a user message and triggers AI logging.
   - `conversation_id` (Int, Required)
   - `content_text` (String, Required)
   - `role` (Enum: 'user', 'assistant')
+  - `attachments` (JSON/Array, Optional)
 - **Response**: `{"message": "Message sent", "id": 120}`
 
 ---

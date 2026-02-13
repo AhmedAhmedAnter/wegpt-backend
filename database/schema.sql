@@ -80,6 +80,7 @@ CREATE TABLE lessons (
     tags JSON DEFAULT NULL,
     duration VARCHAR(50) DEFAULT NULL,
     difficulty_level ENUM('easy','medium','hard') DEFAULT 'medium',
+    attachments JSON DEFAULT NULL,
     is_published BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT NULL,

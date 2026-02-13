@@ -88,6 +88,7 @@ This guide provides a comprehensive list of all available API endpoints, includi
   "term_id": 1,
   "content_text": "Lesson details...",
   "difficulty_level": "medium",
+  "attachments": ["/uploads/lesson/doc1.pdf", "/uploads/lesson/img1.jpg"],
   "is_published": 1
 }
 ```
@@ -119,7 +120,8 @@ This guide provides a comprehensive list of all available API endpoints, includi
 {
   "conversation_id": 8,
   "content_text": "Explane the pyramids",
-  "role": "user"
+  "role": "user",
+  "attachments": ["/uploads/general/my_pdf.pdf"]
 }
 ```
 

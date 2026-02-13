@@ -41,6 +41,7 @@ try {
         'images_links',
         'video_url',
         'tags',
+        'attachments',
         'duration',
         'difficulty_level',
         'is_published'
@@ -49,7 +50,7 @@ try {
     foreach ($allowedFields as $field) {
         if (isset($data[$field])) {
             $fields[] = "$field = :$field";
-            if ($field === 'tags' && is_array($data[$field])) {
+            if (in_array($field, ['tags', 'attachments']) && is_array($data[$field])) {
                 $params[$field] = json_encode($data[$field]);
             } else {
                 // If the field is empty string and it's an optional INT/FK field, set to NULL

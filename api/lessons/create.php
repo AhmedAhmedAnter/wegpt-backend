@@ -16,8 +16,8 @@ if (empty($data['title']) || empty($data['subject_id']) || empty($data['grade_id
 }
 
 try {
-    $sql = "INSERT INTO lessons (title, subject_id, grade_id, specialization_id, term_id, author_id, content_text, pdf_path, images_links, video_url, tags, duration, difficulty_level, is_published) 
-            VALUES (:title, :subject_id, :grade_id, :specialization_id, :term_id, :author_id, :content_text, :pdf_path, :images_links, :video_url, :tags, :duration, :difficulty_level, :is_published)";
+    $sql = "INSERT INTO lessons (title, subject_id, grade_id, specialization_id, term_id, author_id, content_text, pdf_path, images_links, video_url, tags, attachments, duration, difficulty_level, is_published) 
+            VALUES (:title, :subject_id, :grade_id, :specialization_id, :term_id, :author_id, :content_text, :pdf_path, :images_links, :video_url, :tags, :attachments, :duration, :difficulty_level, :is_published)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -32,6 +32,7 @@ try {
         'images_links' => $data['images_links'] ?? null,
         'video_url' => $data['video_url'] ?? null,
         'tags' => isset($data['tags']) ? json_encode($data['tags']) : null,
+        'attachments' => isset($data['attachments']) ? json_encode($data['attachments']) : null,
         'duration' => $data['duration'] ?? null,
         'difficulty_level' => $data['difficulty_level'] ?? 'medium',
         'is_published' => $data['is_published'] ?? 1

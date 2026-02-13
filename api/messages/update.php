@@ -36,12 +36,16 @@ try {
 
     $fields = [];
     $params = [];
-    $allowedFields = ['content_text', 'reactions', 'is_flagged'];
+    $allowedFields = ['content_text', 'reactions', 'attachments', 'is_flagged', 'pdf_path', 'images_links'];
 
     foreach ($allowedFields as $field) {
         if (isset($data[$field])) {
             $fields[] = "$field = :$field";
-            $params[$field] = is_array($data[$field]) ? json_encode($data[$field]) : $data[$field];
+            if (in_array($field, ['reactions', 'attachments']) && is_array($data[$field])) {
+                $params[$field] = json_encode($data[$field]);
+            } else {
+                $params[$field] = $data[$field];
+            }
         }
     }
 

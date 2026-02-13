@@ -1,195 +1,204 @@
-# WeGPT Backend API - Comprehensive Documentation 🚀
+# WeGPT Backend API - Ultimate Technical Documentation 🚀
 
-Welcome to the official documentation for the **WeGPT Backend**. This is a production-ready, RESTful API built with PHP 8+, utilizing clean architecture principles, JWT authentication, and a robust security layer.
-
----
-
-## � Table of Contents
-
-1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Authentication & Security](#authentication--security)
-4. [API Architecture (Clean URLs)](#api-architecture)
-5. [End-to-End API Reference](#api-reference)
-   - [User Management](#user-management)
-   - [Lessons Service](#lessons-service)
-   - [Educational Data (Grades, Subjects, etc.)](#educational-data)
-   - [AI & Conversations](#ai--conversations)
-   - [Media & Uploads](#media--uploads)
-6. [Configuration & Environment](#configuration)
-7. [Developer Setup](#setup)
+This documentation provides an exhaustive guide to the **WeGPT API**. It covers all endpoints, request/response structures, and security protocols required for frontend integration.
 
 ---
 
-## 1. Introduction <a name="introduction"></a>
+## 📑 Core Fundamentals
 
-The WeGPT Backend serves as the engine for an AI-powered educational platform. It manages everything from course content (lessons/subjects) to real-time AI conversations between students and virtual tutors.
+### 🔒 Authentication & Authorization
 
-### Technologies
+The API uses **Stateless JWT Authentication**.
 
-- **PHP 8.1+**: Core logic.
-- **MySQL**: Relational data storage.
-- **JWT**: Stateless, secure authentication.
-- **Apache/mod_rewrite**: Clean RESTful paths.
+- **Auth Header**: `Authorization: Bearer <JWT_TOKEN>`
+- **Token Lifespan**: 24 Hours.
+- **RBAC**:
+  - `Admin`: Full CRUD access to all educational content and system settings.
+  - `Student`: Read access to educational content, Full access to personal conversations and profile.
 
----
+### 🌐 Global Success Response Structure
 
-## 2. Project Structure <a name="project-structure"></a>
-
-```text
-/backend
-├── api/                  # All API endpoints
-│   ├── users/            # Login, Registration, Profile
-│   ├── lessons/          # Full Lesson CRUD
-│   ├── grades/           # Educational Grade context
-│   ├── subjects/         # Subject management
-│   ├── conversations/    # AI Chat session management
-│   ├── messages/         # Real-time message storage
-│   ├── media/            # File upload handlers
-│   ├── auth_middleware.php # Security & Guard functions
-│   ├── jwt_helper.php    # JWT Encoding/Decoding logic
-│   └── helpers.php       # Global utilities (JSON responses, input handling)
-├── config/               # System configuration
-│   ├── database.php      # PDO connection (Powered by .env)
-│   └── env_loader.php    # Custom .env parser
-├── database/             # Database migrations & schemas
-├── uploads/              # Storage for avatars and documents (Gitignored)
-├── .env                  # Private environment variables
-└── seed_admin.php        # Initial system bootstrap script
-```
-
----
-
-## 3. Authentication & Security <a name="authentication--security"></a>
-
-### JWT Workflow
-
-1. Client sends credentials to `/api/login`.
-2. Server validates and returns a **JWT Token** (signed with `JWT_SECRET`).
-3. Client includes this token in the header for all subsequent requests:
-   `Authorization: Bearer <TOKEN>`
-
-### Role-Based Access Control (RBAC)
-
-- **Public**: `POST /api/login`, `POST /api/register`.
-- **Student**: Read access to lessons/grades, full access to their own chat history.
-- **Admin**: Master control for all content creation, modification, and user management.
-
----
-
-## 4. API Architecture <a name="api-architecture"></a>
-
-We use `.htaccess` to map human-readable URLs to PHP files:
-
-- **Standard**: `/api/subjects/index.php` -> `GET /api/subjects`
-- **Parameterized**: `/api/lessons/update.php?id=5` -> `PUT /api/lessons/update/5`
-
----
-
-## 5. API Reference <a name="api-reference"></a>
-
-### 👤 User Management <a name="user-management"></a>
-
-| Method   | Endpoint                 | Access | Body Example                                         |
-| :------- | :----------------------- | :----- | :--------------------------------------------------- |
-| `POST`   | `/api/register`          | Public | `{"name": "...", "email": "...", "password": "..."}` |
-| `POST`   | `/api/login`             | Public | `{"email": "...", "password": "..."}`                |
-| `GET`    | `/api/users`             | Admin  | Returns all registered users.                        |
-| `DELETE` | `/api/users/delete/{id}` | Admin  | Permanent account removal.                           |
-
-### 📚 Lessons Service <a name="lessons-service"></a>
-
-**Endpoint Base**: `/api/lessons`
-
-| Method | Endpoint                   | Description                        | Body         |
-| :----- | :------------------------- | :--------------------------------- | :----------- |
-| `GET`  | `/api/lessons`             | List all published lessons.        | `null`       |
-| `GET`  | `/api/lessons/{id}`        | View detailed lesson content.      | `null`       |
-| `POST` | `/api/lessons/create`      | **Admin Only**. Create new lesson. | See below    |
-| `PUT`  | `/api/lessons/update/{id}` | **Admin Only**. Update details.    | Partial JSON |
-
-**Create Body Sample:**
+Most success responses follow this pattern:
 
 ```json
 {
-  "title": "Introduction to Algebra",
-  "subject_id": 1,
-  "grade_id": 1,
-  "term_id": 1,
-  "content_text": "Content goes here...",
-  "difficulty_level": "medium",
-  "is_published": 1
+  "status": "success",
+  "message": "Human readable message",
+  "data": { ... } // or array of objects
 }
 ```
 
-### � AI & Conversations <a name="ai--conversations"></a>
+### ❌ Error Response Structure
 
-Manage student-AI interactions.
-
-| Method | Endpoint                    | Description                             |
-| :----- | :-------------------------- | :-------------------------------------- |
-| `GET`  | `/api/conversations`        | List current user's chat history.       |
-| `POST` | `/api/conversations/create` | Initialize a new AI session.            |
-| `GET`  | `/api/messages/{conv_id}`   | Get all messages for a specific chat.   |
-| `POST` | `/api/messages/send`        | Send a new message & store AI response. |
-
----
-
-## 6. Configuration <a name="configuration"></a>
-
-The system is controlled via the `.env` file:
-
-- **DB_HOST**: Database server (default: `localhost`).
-- **DB_NAME**: Database name.
-- **DB_USER / DB_PASS**: Credentials.
-- **JWT_SECRET**: High-entropy string for signing tokens.
-- **BASE_URL**: used for generating full paths for uploaded files.
-- **APP_MODE**:
-  - `development`: Shows specific SQL errors for debugging.
-  - `production`: Shows generic "Connection refused" to hide server details.
-
----
-
-## 7. Developer Setup <a name="setup"></a>
-
-### Phase 1: Environment
-
-1. Copy `.env.example` to `.env`.
-2. Create a database in MySQL and import `database/schema.sql`.
-
-### Phase 2: Seeding
-
-To access **Admin** functions, you need an admin account. Run the seeder:
-
-```bash
-php seed_admin.php
+```json
+{
+  "error": "Short error description"
+}
 ```
 
-### Phase 3: Web Server
+---
 
-Ensure your Apache server allows `.htaccess` overrides:
+## 🛠 1. User & Auth Service
 
-```apache
-<Directory "/opt/lampp/htdocs/backend">
-    AllowOverride All
-    Require all granted
-</Directory>
+### `POST /api/register` (Public)
+
+Creates a new student account.
+
+- **Request Body**:
+  - `name` (String, Required)
+  - `email` (String, Required)
+  - `password` (String, Required)
+  - `grade_id` (Int, Optional)
+- **Response (201)**: `{"message": "User registered successfully", "user_id": 12}`
+
+### `POST /api/login` (Public)
+
+Authenticates a user and generates a token.
+
+- **Request Body**:
+  - `email` (String, Required)
+  - `password` (String, Required)
+- **Response (200)**:
+
+```json
+{
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
+  "user": { "id": 1, "name": "...", "role": "student", ... }
+}
 ```
 
-Make sure `mod_rewrite` and `mod_headers` are enabled in your PHP/Apache configuration.
+---
+
+## 📚 2. Lessons & Educational Content
+
+### `GET /api/lessons` (User)
+
+Returns all published lessons.
+
+- **Response**: List of Lesson objects including `title`, `author_id`, `difficulty_level`, `pdf_path`, etc.
+
+### `POST /api/lessons/create` (Admin)
+
+Creates a new lesson module.
+
+- **Request Body**:
+  - `title` (String, Required)
+  - `subject_id` (Int, Required)
+  - `grade_id` (Int, Required)
+  - `term_id` (Int, Required)
+  - `content_text` (String, Optional)
+  - `pdf_path` (URL/Path, Optional)
+  - `video_url` (URL, Optional)
+  - `difficulty_level` (Enum: 'easy', 'medium', 'hard', Default: 'medium')
+- **Response (201)**: `{"message": "Lesson created", "id": 45}`
+
+### `PUT /api/lessons/update/{id}` (Admin)
+
+Update any property of a lesson. Supports partial updates.
+
+- **Body Example**: `{"title": "New Title", "is_published": 1}`
 
 ---
 
-## � Common Error Codes
+## 💬 3. AI Messaging & Conversations
 
-- `200 OK`: Request successful.
-- `201 Created`: Resource successfully saved.
-- `401 Unauthorized`: Invalid or missing JWT token.
-- `403 Forbidden`: Role mismatch (e.g., student trying to delete a lesson).
-- `404 Not Found`: Resource ID does not exist.
-- `405 Method Not Allowed`: Using GET on a POST-only endpoint.
-- `500 Internal Error`: Database or syntax failure.
+### `POST /api/conversations/create` (User)
+
+Initializes a new session for AI interaction.
+
+- **Request Body**: (Optional) `{"context": "Subject: Physics", "lessons_ids": [1, 5]}`
+- **Response**: `{"id": 8, "message": "Conversation started"}`
+
+### `GET /api/messages/{conversation_id}` (User/Owner)
+
+Fetches chronological message history for a chat.
+
+- **Response**:
+
+```json
+[
+  { "id": 1, "role": "user", "content_text": "Hello AI" },
+  { "id": 2, "role": "assistant", "content_text": "Hello! How can I help?" }
+]
+```
+
+### `POST /api/messages/send` (User)
+
+Sends a user message and triggers AI logging.
+
+- **Request Body**:
+  - `conversation_id` (Int, Required)
+  - `content_text` (String, Required)
+  - `role` (Enum: 'user', 'assistant')
+- **Response**: `{"message": "Message sent", "id": 120}`
 
 ---
 
-_Built with ❤️ by the WeGPT Team._
+## ⚙️ 4. System & AI Settings
+
+### `GET /api/ai-settings` (User)
+
+Fetch active AI behavioral configurations.
+
+- **Response**: Array of settings: `[{ "key_name": "temperature", "value": "0.7" }, ...]`
+
+### `POST /api/ai-settings/create` (Admin)
+
+- **Request Body**: `{"key_name": "...", "value": "...", "category": "general"}`
+
+---
+
+## 📁 5. Media & File Handling
+
+### `POST /api/upload` (User)
+
+Uploads files to the server.
+
+- **Body**: `multipart/form-data`
+  - `file`: The binary file.
+  - `type`: 'avatar' (Images) or 'lesson' (PDF/Docs).
+- **Response**:
+
+```json
+{
+  "message": "File uploaded successfully",
+  "url": "/uploads/avatar/file_name.png",
+  "full_url": "http://domain.com/uploads/avatar/file_name.png"
+}
+```
+
+---
+
+## 🧬 6. Resource Map (CRUD Tables)
+
+| Resource            |       GET (All)        |       GET (One)       |         POST (Create)         |             PUT (Edit)             |               DELETE               |
+| :------------------ | :--------------------: | :-------------------: | :---------------------------: | :--------------------------------: | :--------------------------------: |
+| **Grades**          |     `/api/grades`      |           -           |     `/api/grades/create`      |     `/api/grades/update/{id}`      |     `/api/grades/delete/{id}`      |
+| **Subjects**        |    `/api/subjects`     |           -           |    `/api/subjects/create`     |    `/api/subjects/update/{id}`     |    `/api/subjects/delete/{id}`     |
+| **Terms**           |      `/api/terms`      |           -           |      `/api/terms/create`      |      `/api/terms/update/{id}`      |      `/api/terms/delete/{id}`      |
+| **Specializations** | `/api/specializations` |           -           | `/api/specializations/create` | `/api/specializations/update/{id}` | `/api/specializations/delete/{id}` |
+| **Feedbacks**       |    `/api/feedbacks`    | `/api/feedbacks/{id}` |     `/api/feedbacks/send`     |    `/api/feedbacks/update/{id}`    |    `/api/feedbacks/delete/{id}`    |
+
+---
+
+## 🚀 Deployment & Modes
+
+### Setting the Environment
+
+In `.env`:
+
+- `APP_MODE=development`: Detailed PDO exceptions for debugging.
+- `APP_MODE=production`: Silent errors for security.
+
+### Routing Logic
+
+The `.htaccess` creates "Clean URLs". You do NOT need the `.php` extension in your API calls.
+
+- **Wrong**: `GET /api/lessons/index.php`
+- **Right**: `GET /api/lessons`
+
+---
+
+_Document Version: 1.1.0_
+_Developer: Ahmed Anter_

@@ -4,6 +4,18 @@ This documentation provides an exhaustive guide to the **WeGPT API**. It covers 
 
 ---
 
+## 📑 Table of Contents
+
+1. [Core Fundamentals](#-core-fundamentals)
+2. [Testing Guide (All Endpoints)](./API_TEST_GUIDE.md)
+3. [User & Auth Service](#-1-user--auth-service)
+4. [Lessons & Content](#-2-lessons--educational-content)
+5. [AI & Messaging](#-3-ai-messaging--conversations)
+6. [Media & Uploads](#-5-media--file-handling)
+7. [Resource Map](#-6-resource-map-crud-tables)
+
+---
+
 ## 📑 Core Fundamentals
 
 ### 🔒 Authentication & Authorization
@@ -201,4 +213,5 @@ The `.htaccess` creates "Clean URLs". You do NOT need the `.php` extension in yo
 ---
 
 _Document Version: 1.1.0_
-_Developer: Ahmed Anter_
+_7. [Developer Setup](#setup) 8. [**Full Endpoints Test Guide**](./API_TEST_GUIDE.md)
+\_Developer: Ahmed Anter_

@@ -1,5 +1,6 @@
 <?php
 
+require_once '../../config/database.php';
 require_once '../helpers.php';
 
 // Only allow POST requests
@@ -30,6 +31,10 @@ try {
     // Hash password
     $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
 
+    // SECURITY: Force role to 'student' for public registration
+    // If you need an admin, use a dedicated script or the DB directly
+    $role = 'student';
+
     // Prepare insert query
     $sql = "INSERT INTO users (name, email, password_hash, role, grade_id, specialization_id, birth_date, phone, gender) 
             VALUES (:name, :email, :password_hash, :role, :grade_id, :specialization_id, :birth_date, :phone, :gender)";
@@ -40,7 +45,7 @@ try {
         'name' => $data['name'],
         'email' => $data['email'],
         'password_hash' => $passwordHash,
-        'role' => $data['role'] ?? 'student',
+        'role' => $role,
         'grade_id' => $data['grade_id'] ?? null,
         'specialization_id' => $data['specialization_id'] ?? null,
         'birth_date' => $data['birth_date'] ?? null,

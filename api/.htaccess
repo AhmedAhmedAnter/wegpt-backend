@@ -1,0 +1,44 @@
+RewriteEngine On
+
+# CORS Headers
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# --- USERS ---
+# GET /api/users -> List all
+RewriteRule ^users/?$ users/index.php [L,QSA]
+# GET /api/users/5 -> View one
+RewriteRule ^users/([0-9]+)$ users/view.php?id=$1 [L,QSA]
+# POST /api/register
+RewriteRule ^register$ users/register.php [L,QSA]
+# POST /api/login
+RewriteRule ^login$ users/login.php [L,QSA]
+
+# --- LESSONS ---
+# GET /api/lessons -> List all
+RewriteRule ^lessons/?$ lessons/index.php [L,QSA]
+# GET /api/lessons/5 -> View one
+RewriteRule ^lessons/([0-9]+)$ lessons/view.php?id=$1 [L,QSA]
+
+# --- GRADES, SUBJECTS, SPECIALIZATIONS, TERMS ---
+RewriteRule ^grades/?$ grades/index.php [L,QSA]
+RewriteRule ^subjects/?$ subjects/index.php [L,QSA]
+RewriteRule ^specializations/?$ specializations/index.php [L,QSA]
+RewriteRule ^terms/?$ terms/index.php [L,QSA]
+
+# --- CONVERSATIONS ---
+# GET /api/conversations?user_id=5
+RewriteRule ^conversations/?$ conversations/index.php [L,QSA]
+# POST /api/conversations/create
+RewriteRule ^conversations/create$ conversations/create.php [L,QSA]
+
+# --- MESSAGES ---
+# GET /api/messages/12 (where 12 is conversation_id)
+RewriteRule ^messages/([0-9]+)$ messages/index.php?conversation_id=$1 [L,QSA]
+# POST /api/messages/send
+RewriteRule ^messages/send$ messages/create.php [L,QSA]
+
+# --- AI SETTINGS & FEEDBACK ---
+RewriteRule ^ai-settings/?$ ai_settings/index.php [L,QSA]
+RewriteRule ^feedback/send$ feedback/create.php [L,QSA]

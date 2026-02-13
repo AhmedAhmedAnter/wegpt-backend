@@ -24,6 +24,8 @@ try {
 
     $pdo = new PDO($dsn, $db_config['username'], $db_config['password'], $options);
 } catch (\PDOException $e) {
-    // In production, you would log this and show a generic message
+    if (($_ENV['APP_MODE'] ?? 'development') === 'development') {
+        die("Database connection failed: " . $e->getMessage());
+    }
     die("Database connection failed: Connection refused.");
 }

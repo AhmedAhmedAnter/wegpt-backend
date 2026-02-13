@@ -1,10 +1,11 @@
 <?php
+
 require_once '../../config/database.php';
 require_once '../helpers.php';
-require_once '../auth_middleware.php';
+require_once "../auth_middleware.php";
+authorizeAdmin();
 
 // Only Admins can create grades
-authorizeAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendError('Method Not Allowed', 405);

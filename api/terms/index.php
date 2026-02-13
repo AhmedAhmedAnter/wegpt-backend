@@ -1,6 +1,9 @@
 <?php
+
 require_once '../../config/database.php';
 require_once '../helpers.php';
+require_once "../auth_middleware.php";
+authorizeUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     sendError('Method Not Allowed', 405);

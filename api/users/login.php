@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/database.php';
+
 require_once '../helpers.php';
 
 // Only allow POST requests

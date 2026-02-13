@@ -6,50 +6,68 @@ Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
 Header set Access-Control-Allow-Headers "Content-Type, Authorization"
 
 # --- USERS ---
-# GET /api/users -> List all
 RewriteRule ^users/?$ users/index.php [L,QSA]
-# GET /api/users/5 -> View one
 RewriteRule ^users/([0-9]+)$ users/view.php?id=$1 [L,QSA]
-# POST /api/register
+RewriteRule ^users/update/([0-9]+)$ users/update.php?id=$1 [L,QSA]
+RewriteRule ^users/delete/([0-9]+)$ users/delete.php?id=$1 [L,QSA]
 RewriteRule ^register$ users/register.php [L,QSA]
+RewriteRule ^login$ users/login.php [L,QSA]
 
 # --- MEDIA & UPLOADS ---
 RewriteRule ^upload/?$ media/upload.php [L,QSA]
-# POST /api/login
-RewriteRule ^login$ users/login.php [L,QSA]
 
 # --- LESSONS ---
-# GET /api/lessons -> List all
 RewriteRule ^lessons/?$ lessons/index.php [L,QSA]
-# POST /api/lessons/create
 RewriteRule ^lessons/create$ lessons/create.php [L,QSA]
-# GET /api/lessons/5 -> View one
 RewriteRule ^lessons/([0-9]+)$ lessons/view.php?id=$1 [L,QSA]
-# PUT /api/lessons/update/5
 RewriteRule ^lessons/update/([0-9]+)$ lessons/update.php?id=$1 [L,QSA]
-# DELETE /api/lessons/delete/5
 RewriteRule ^lessons/delete/([0-9]+)$ lessons/delete.php?id=$1 [L,QSA]
 
-# --- GRADES, SUBJECTS, SPECIALIZATIONS, TERMS ---
+# --- GRADES ---
 RewriteRule ^grades/?$ grades/index.php [L,QSA]
+RewriteRule ^grades/create$ grades/create.php [L,QSA]
+RewriteRule ^grades/update/([0-9]+)$ grades/update.php?id=$1 [L,QSA]
+RewriteRule ^grades/delete/([0-9]+)$ grades/delete.php?id=$1 [L,QSA]
+
+# --- SUBJECTS ---
 RewriteRule ^subjects/?$ subjects/index.php [L,QSA]
+RewriteRule ^subjects/create$ subjects/create.php [L,QSA]
+RewriteRule ^subjects/update/([0-9]+)$ subjects/update.php?id=$1 [L,QSA]
+RewriteRule ^subjects/delete/([0-9]+)$ subjects/delete.php?id=$1 [L,QSA]
+
+# --- SPECIALIZATIONS ---
 RewriteRule ^specializations/?$ specializations/index.php [L,QSA]
+RewriteRule ^specializations/create$ specializations/create.php [L,QSA]
+RewriteRule ^specializations/update/([0-9]+)$ specializations/update.php?id=$1 [L,QSA]
+RewriteRule ^specializations/delete/([0-9]+)$ specializations/delete.php?id=$1 [L,QSA]
+
+# --- TERMS ---
 RewriteRule ^terms/?$ terms/index.php [L,QSA]
+RewriteRule ^terms/create$ terms/create.php [L,QSA]
+RewriteRule ^terms/update/([0-9]+)$ terms/update.php?id=$1 [L,QSA]
+RewriteRule ^terms/delete/([0-9]+)$ terms/delete.php?id=$1 [L,QSA]
 
 # --- CONVERSATIONS ---
-# GET /api/conversations?user_id=5
 RewriteRule ^conversations/?$ conversations/index.php [L,QSA]
-# POST /api/conversations/create
 RewriteRule ^conversations/create$ conversations/create.php [L,QSA]
+RewriteRule ^conversations/update/([0-9]+)$ conversations/update.php?id=$1 [L,QSA]
+RewriteRule ^conversations/delete/([0-9]+)$ conversations/delete.php?id=$1 [L,QSA]
 
 # --- MESSAGES ---
-# GET /api/messages/12 (where 12 is conversation_id)
 RewriteRule ^messages/([0-9]+)$ messages/index.php?conversation_id=$1 [L,QSA]
-# POST /api/messages/send
 RewriteRule ^messages/send$ messages/create.php [L,QSA]
+RewriteRule ^messages/update/([0-9]+)$ messages/update.php?id=$1 [L,QSA]
+RewriteRule ^messages/delete/([0-9]+)$ messages/delete.php?id=$1 [L,QSA]
 
-# --- AI SETTINGS & FEEDBACK ---
+# --- AI SETTINGS ---
 RewriteRule ^ai-settings/?$ ai_settings/index.php [L,QSA]
+RewriteRule ^ai-settings/create$ ai_settings/create.php [L,QSA]
+RewriteRule ^ai-settings/update/([0-9]+)$ ai_settings/update.php?id=$1 [L,QSA]
+RewriteRule ^ai-settings/delete/([0-9]+)$ ai_settings/delete.php?id=$1 [L,QSA]
+
+# --- FEEDBACKS ---
 RewriteRule ^feedbacks/?$ feedbacks/index.php [L,QSA]
 RewriteRule ^feedbacks/([0-9]+)$ feedbacks/view.php?id=$1 [L,QSA]
 RewriteRule ^feedbacks/send$ feedbacks/create.php [L,QSA]
+RewriteRule ^feedbacks/update/([0-9]+)$ feedbacks/update.php?id=$1 [L,QSA]
+RewriteRule ^feedbacks/delete/([0-9]+)$ feedbacks/delete.php?id=$1 [L,QSA]

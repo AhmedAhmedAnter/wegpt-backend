@@ -1,74 +1,102 @@
-# WeGPT Backend API
+# WeGPT Backend API Documentation 🚀
 
-A high-performance, lightweight PHP-based RESTful API for the WeGPT educational platform.
+Welcome to the **WeGPT Backend API**. This is a robust, secure, and RESTful PHP backend designed to power the WeGPT educational platform.
 
-## 🚀 Overview
+---
 
-This project provides the backend infrastructure for WeGPT, handling user authentication, educational content management (grades, subjects, lessons), and AI-driven chat conversations.
+## 🛠 Features
 
-## 📂 Project Structure
+- **Stateless Auth**: JWT (JSON Web Tokens) for secure session management.
+- **RBAC**: Role-Based Access Control (Admin vs. Student).
+- **Clean URLs**: RESTful routing via `.htaccess`.
+- **Media Management**: Centralized file upload system for avatars and lessons.
+- **Environment Aware**: Environment variables via `.env`.
 
-```text
-backend/
-├── api/
-│   ├── users/            # Auth, Registration & Profile management
-│   ├── lessons/          # Educational content delivery
-│   ├── conversations/    # Chat session management
-│   ├── messages/         # Message history and exchange
-│   ├── grades/           # Grade level data
-│   ├── subjects/         # Subject categories
-│   ├── terms/            # Academic terms
-│   ├── ai_settings/      # AI Model configurations
-│   ├── helpers.php       # API utility functions
-│   └── .htaccess         # Clean URL routing & CORS
-├── config/
-│   └── database.php      # Secure PDO connection
-├── database/
-│   └── schema.sql        # Full MySQL database schema
-├── index.php             # API Health Check
-└── README.md             # Documentation
-```
+---
 
-## 🛠️ Technology Stack
+## 🚪 Authentication
 
-- **Language:** PHP 8+
-- **Database:** MySql (using PDO)
-- **Web Server:** Apache (XAMPP/Lamp Stack)
-- **Architecture:** Headless RESTful API
+All protected endpoints require a **Bearer Token** in the header.
+**Header:** `Authorization: Bearer <your_jwt_token>`
 
-## 🔗 API Endpoints (Clean URLs)
+### Auth Endpoints
 
-### Authentication & Users
+| Method | Endpoint        | Description          | Body                      |
+| :----- | :-------------- | :------------------- | :------------------------ |
+| `POST` | `/api/register` | Register new student | `{name, email, password}` |
+| `POST` | `/api/login`    | Login & get JWT      | `{email, password}`       |
 
-- `POST /api/register` - Create a new account
-- `POST /api/login` - Authenticate and get session
-- `GET /api/users` - List all users (Admin)
-- `GET /api/users/{id}` - Get specific user profile
+---
 
-### Educational Content
+## 📚 Core Resources (CRUD)
 
-- `GET /api/lessons` - List all published lessons
-- `GET /api/lessons/{id}` - Get lesson details
-- `GET /api/subjects` - List available subjects
-- `GET /api/grades` - List available grades
+### 📖 Lessons
 
-### AI & Chat
+| Method   | Endpoint                   | Access    | Body (JSON)                                           |
+| :------- | :------------------------- | :-------- | :---------------------------------------------------- |
+| `GET`    | `/api/lessons`             | User      | None                                                  |
+| `GET`    | `/api/lessons/{id}`        | User      | None                                                  |
+| `POST`   | `/api/lessons/create`      | **Admin** | `{title, subject_id, grade_id, term_id, ...}`         |
+| `PUT`    | `/api/lessons/update/{id}` | **Admin** | `{title, content_text, ...}` (Partial update allowed) |
+| `DELETE` | `/api/lessons/delete/{id}` | **Admin** | None                                                  |
 
-- `GET /api/conversations?user_id={id}` - Get chat history for a user
-- `POST /api/conversations/create` - Start a new AI chat session
-- `GET /api/messages/{conversation_id}` - Get full message history
-- `POST /api/messages/send` - Send a message (Student/AI)
-- `POST /api/feedback/send` - Rate AI responses
+### 🎓 Grades, Subjects, Terms & Specializations
 
-## ⚙️ Installation
+These follow the same pattern as Lessons.
 
-1. Clone this repository into your `htdocs` or public directory.
-2. Import `database/schema.sql` into your MySQL server.
-3. Update `config/database.php` with your database credentials.
-4. Ensure Apache's `mod_rewrite` is enabled for clean URLs.
+- **Read**: `GET /api/{resource}` (User)
+- **Manage**: `POST`, `PUT`, `DELETE` (Admin)
 
-## 🔒 Security
+---
 
-- **SQL Injection:** Prevented by forced use of PDO Prepared Statements.
-- **Passwords:** Securely hashed using `PASSWORD_DEFAULT` (Bcrypt).
-- **CORS:** Pre-configured for cross-origin frontend communication.
+## 💬 Chat & AI Functions
+
+### Conversations
+
+| Method   | Endpoint                         | Access      | Description           |
+| :------- | :------------------------------- | :---------- | :-------------------- |
+| `GET`    | `/api/conversations`             | User        | List my conversations |
+| `POST`   | `/api/conversations/create`      | User        | Start new chat        |
+| `DELETE` | `/api/conversations/delete/{id}` | Owner/Admin | Delete a chat         |
+
+### Messages
+
+| Method | Endpoint                    | Access      | Description      |
+| :----- | :-------------------------- | :---------- | :--------------- |
+| `GET`  | `/api/messages/{conv_id}`   | User        | Get chat history |
+| `POST` | `/api/messages/send`        | User        | Send a message   |
+| `PUT`  | `/api/messages/update/{id}` | Owner/Admin | Edit a message   |
+
+---
+
+## 📁 Media & Uploads
+
+Standard multipart/form-data upload.
+
+| Method | Endpoint      | Type     | Description               |
+| :----- | :------------ | :------- | :------------------------ |
+| `POST` | `/api/upload` | `avatar` | Upload profile pic        |
+| `POST` | `/api/upload` | `lesson` | Upload PDF/Doc for lesson |
+
+---
+
+## ⚙️ Setup & Configuration
+
+1. **Environment**:
+   Rename `.env.example` to `.env` and configure your Database.
+2. **Initial Admin**:
+   Run the following to create your first admin user:
+   ```bash
+   php seed_admin.php
+   ```
+3. **Apache Requirements**:
+   Ensure `mod_rewrite` and `mod_headers` are enabled.
+
+---
+
+## 🛡 Security Modes
+
+Managed via `APP_MODE` in `.env`:
+
+- `development`: Full SQL errors shown.
+- `production`: Generic secure error messages.
